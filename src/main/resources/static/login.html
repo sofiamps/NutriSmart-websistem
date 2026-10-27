@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - NutriSmart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        *{ margin:0; padding:0; box-sizing:border-box; }
+        body{ font-family:'DM Sans',sans-serif; background:#f0fdf4; }
+
+        .wrapper{ display:flex; min-height:100vh; }
+
+        /* PAINEL ESQUERDO */
+        .left{
+            flex:1; background:#1B4332; color:#fff;
+            padding:60px; display:flex; flex-direction:column; justify-content:center;
+        }
+        .left-logo{
+            font-family:'Playfair Display',serif; font-size:48px; font-weight:700;
+            background:linear-gradient(135deg,#52B788,#95D5B2);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+            background-clip:text; margin-bottom:16px;
+        }
+        .left-tag{ font-size:22px; font-weight:300; color:#D8F3DC; margin-bottom:48px; }
+        .left ul{ list-style:none; }
+        .left ul li{
+            font-size:17px; margin-bottom:20px;
+            display:flex; align-items:center; color:#D8F3DC;
+        }
+        .check{
+            display:inline-flex; align-items:center; justify-content:center;
+            width:32px; height:32px; min-width:32px;
+            background:rgba(82,183,136,0.2); border-radius:50%;
+            margin-right:16px; color:#52B788; font-weight:700;
+        }
+
+        /* PAINEL DIREITO */
+        .right{
+            flex:1; background:#fff;
+            display:flex; align-items:center; justify-content:center; padding:60px;
+        }
+        .form-box{ width:100%; max-width:420px; }
+        .form-title{
+            font-family:'Playfair Display',serif; font-size:36px;
+            color:#1B4332; margin-bottom:8px;
+        }
+        .form-sub{ font-size:15px; color:#6B7280; margin-bottom:32px; }
+
+        /* TOGGLE PILLS */
+        .toggle-wrap{
+            display:flex; background:#f0fdf4; border-radius:100px;
+            padding:4px; margin-bottom:32px;
+        }
+        .toggle-btn{
+            flex:1; padding:12px 24px; border:none; border-radius:100px;
+            font-family:'DM Sans',sans-serif; font-size:14px; font-weight:500;
+            color:#2D6A4F; cursor:pointer; transition:all .3s ease; background:transparent;
+        }
+        .toggle-btn.active{
+            background:#fff; box-shadow:0 2px 8px rgba(45,106,79,0.18);
+            font-weight:600;
+        }
+
+        /* INPUTS */
+        .input-wrap{ position:relative; margin-bottom:20px; }
+        .input-icon{
+            position:absolute; left:16px; top:50%; transform:translateY(-50%);
+            color:#74C69D; font-size:18px; pointer-events:none;
+        }
+        .field{
+            width:100%; padding:15px 16px 15px 46px;
+            border:2px solid #e0e0e0; border-radius:12px;
+            font-family:'DM Sans',sans-serif; font-size:15px;
+            outline:none; transition:all .25s ease; color:#1a3a2a;
+        }
+        .field:focus{ border-color:#52B788; box-shadow:0 0 0 4px rgba(82,183,136,0.1); }
+        .field-pass{ padding-right:48px; }
+        .eye-btn{
+            position:absolute; right:14px; top:50%; transform:translateY(-50%);
+            background:none; border:none; cursor:pointer; font-size:18px;
+            color:#74C69D; padding:4px; line-height:1;
+        }
+
+        /* LINKS */
+        .links{ display:flex; justify-content:space-between; margin-bottom:20px; }
+        .links a{ color:#2D6A4F; font-size:13px; text-decoration:none; }
+        .links a:hover{ text-decoration:underline; }
+
+        /* BOTÃO ENTRAR */
+        .btn-entrar{
+            width:100%; padding:15px;
+            background:linear-gradient(135deg,#52B788,#2D6A4F);
+            color:#fff; border:none; border-radius:12px;
+            font-family:'DM Sans',sans-serif; font-size:16px; font-weight:600;
+            cursor:pointer; transition:transform .2s ease, box-shadow .2s ease;
+        }
+        .btn-entrar:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(45,106,79,0.25); }
+        .btn-entrar:active{ transform:translateY(0); }
+
+        .criar{ text-align:center; margin-top:20px; font-size:14px; color:#6B7280; }
+        .criar a{ color:#2D6A4F; font-weight:600; text-decoration:none; }
+        .criar a:hover{ text-decoration:underline; }
+
+        /* MOBILE */
+        @media(max-width:768px){
+            .left{ display:none; }
+            .right{ padding:40px 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <!-- Painel esquerdo -->
+    <div class="left">
+        <div class="left-logo">NutriSmart</div>
+        <div class="left-tag">Cuide da sua saúde com inteligência</div>
+        <ul>
+            <li><span class="check">✓</span> Plano alimentar personalizado</li>
+            <li><span class="check">✓</span> Acompanhamento nutricional</li>
+            <li><span class="check">✓</span> Suporte com IA</li>
+        </ul>
+    </div>
+
+    <!-- Painel direito -->
+    <div class="right">
+        <div class="form-box">
+            <h1 class="form-title">Bem-vindo de volta</h1>
+            <p class="form-sub">Acesse sua conta para continuar</p>
+
+            <!-- Toggle Paciente / Nutricionista -->
+            <div class="toggle-wrap">
+                <button class="toggle-btn active" id="btnPaciente" onclick="setTipo('PACIENTE')">
+                    Sou Paciente
+                </button>
+                <button class="toggle-btn" id="btnNutri" onclick="setTipo('NUTRICIONISTA')">
+                    Sou Nutricionista
+                </button>
+            </div>
+
+            <!-- Formulário -->
+            <div class="input-wrap">
+                <span class="input-icon">✉</span>
+                <input class="field" type="email" id="email" placeholder="Seu e-mail" required>
+            </div>
+
+            <div class="input-wrap">
+                <span class="input-icon">🔒</span>
+                <input class="field field-pass" type="password" id="senha" placeholder="Sua senha" required>
+                <button class="eye-btn" type="button" onclick="toggleSenha()" id="eyeBtn">👁</button>
+            </div>
+
+            <div class="links">
+                <a href="/redefinir_senha.html">Esqueci minha senha</a>
+            </div>
+
+            <button class="btn-entrar" onclick="fazerLogin()">Entrar</button>
+
+            <div class="criar">
+                Primeira vez aqui? <a href="/cadastro.html">Criar conta</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let tipoAtual = 'PACIENTE';
+
+    function setTipo(tipo) {
+        tipoAtual = tipo;
+        document.getElementById('btnPaciente').classList.toggle('active', tipo === 'PACIENTE');
+        document.getElementById('btnNutri').classList.toggle('active', tipo === 'NUTRICIONISTA');
+    }
+
+    function toggleSenha() {
+        const campo = document.getElementById('senha');
+        const btn   = document.getElementById('eyeBtn');
+        if (campo.type === 'password') {
+            campo.type = 'text';
+            btn.textContent = '👁‍🗨';
+        } else {
+            campo.type = 'password';
+            btn.textContent = '👁';
+        }
+    }
+
+    async function fazerLogin() {
+        const email = document.getElementById('email').value.trim();
+        const senha = document.getElementById('senha').value;
+
+        if (!email || !senha) {
+            Swal.fire({ icon:'warning', title:'Preencha os campos', confirmButtonColor:'#2D6A4F' });
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/usuarios/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, senha })
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                // tipo vem do backend: "NUTRICIONISTA" ou "PACIENTE"
+                const tipo = (data.tipo || tipoAtual || '').toUpperCase();
+                localStorage.setItem('usuarioId',    data.id        || '');
+                localStorage.setItem('nomeUsuario',  data.nome      || '');
+                localStorage.setItem('emailUsuario', email);
+                localStorage.setItem('tipoUsuario',  tipo);
+                // Se for paciente, salva o ID real da tabela pacientes
+                if (data.pacienteId) {
+                    localStorage.setItem('pacienteRealId', String(data.pacienteId));
+                }
+
+                if (tipo === 'PACIENTE') {
+                    window.location.href = '/home_paciente.html';
+                } else {
+                    window.location.href = '/dashboard.html';
+                }
+            } else {
+                Swal.fire({ icon:'error', title:'E-mail ou senha incorretos', confirmButtonColor:'#2D6A4F' });
+            }
+        } catch (e) {
+            Swal.fire({ icon:'error', title:'Erro de conexão', text:'Verifique o servidor.', confirmButtonColor:'#2D6A4F' });
+        }
+    }
+
+    // Enter no campo senha faz login
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('senha').addEventListener('keydown', e => {
+            if (e.key === 'Enter') fazerLogin();
+        });
+    });
+</script>
+</body>
+</html>
